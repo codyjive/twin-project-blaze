@@ -38,10 +38,34 @@ export function VehicleCardProfessional({
       // Get current dealer settings
       const settings = dealerSettingsService.getSettings();
       
+      // Calculate finance down payment based on configuration
+      let financeDownPayment = settings.finance.defaultDownPayment;
+      if (settings.finance.defaultDownPaymentConfig) {
+        const config = settings.finance.defaultDownPaymentConfig;
+        if (config.type === 'percentage') {
+          const basePrice = config.basedOn === 'msrp' ? vehicle.msrp : (vehicle.price || vehicle.msrp);
+          financeDownPayment = Math.round((basePrice || 0) * (config.value / 100));
+        } else {
+          financeDownPayment = config.value;
+        }
+      }
+      
+      // Calculate lease down payment based on configuration
+      let leaseDownPayment = settings.lease.defaultDownPayment;
+      if (settings.lease.defaultDownPaymentConfig) {
+        const config = settings.lease.defaultDownPaymentConfig;
+        if (config.type === 'percentage') {
+          const basePrice = config.basedOn === 'msrp' ? vehicle.msrp : (vehicle.price || vehicle.msrp);
+          leaseDownPayment = Math.round((basePrice || 0) * (config.value / 100));
+        } else {
+          leaseDownPayment = config.value;
+        }
+      }
+      
       // Calculate finance payment with dealer settings
       const financeResult = await calculate(vehicle, {
         type: 'finance',
-        downPayment: settings.finance.defaultDownPayment,
+        downPayment: financeDownPayment,
         term: settings.finance.defaultTerms[2] || 72, // Use middle term or fallback
         creditTier: settings.finance.defaultCreditTier as any,
       });
@@ -50,7 +74,7 @@ export function VehicleCardProfessional({
       // Calculate lease payment with dealer settings
       const leaseResult = await calculate(vehicle, {
         type: 'lease',
-        downPayment: settings.lease.defaultDownPayment,
+        downPayment: leaseDownPayment,
         term: settings.lease.defaultTerms[1] || 36, // Use second term or fallback
         annualMiles: settings.lease.defaultMileage[0] || 10000,
       });

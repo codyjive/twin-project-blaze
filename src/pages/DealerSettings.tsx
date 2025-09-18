@@ -18,11 +18,19 @@ export function DealerSettingsPage() {
   const [hasChanges, setHasChanges] = useState(false);
 
   const handleSave = () => {
+    // Clear any cached calculations first
+    localStorage.removeItem('payment-cache');
+    
     dealerSettingsService.updateSettings(settings);
     setHasChanges(false);
     
     // Trigger a recalculation event
     window.dispatchEvent(new CustomEvent('dealerSettingsUpdated'));
+    
+    // Force page reload to ensure all components get fresh settings
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
     
     toast({
       title: 'Settings Saved',
@@ -69,11 +77,20 @@ export function DealerSettingsPage() {
           <Button 
             variant="outline" 
             onClick={() => {
+              // First save current settings
+              if (hasChanges) {
+                dealerSettingsService.updateSettings(settings);
+                setHasChanges(false);
+              }
+              // Clear cache and trigger recalculation
+              localStorage.removeItem('payment-cache');
               window.dispatchEvent(new CustomEvent('dealerSettingsUpdated'));
               toast({
                 title: 'Recalculating Payments',
                 description: 'All vehicle payments are being recalculated with current settings.',
               });
+              // Force reload to ensure fresh calculations
+              setTimeout(() => window.location.reload(), 500);
             }}
           >
             <RefreshCw className="h-4 w-4 mr-2" />

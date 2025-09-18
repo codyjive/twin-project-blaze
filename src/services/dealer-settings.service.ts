@@ -7,6 +7,11 @@ const DEFAULT_SETTINGS: DealerSettings = {
   finance: {
     defaultTerms: [36, 48, 60, 72, 84],
     defaultDownPayment: 0,
+    defaultDownPaymentConfig: {
+      type: 'percentage',
+      value: 10,
+      basedOn: 'selling',
+    },
     defaultCreditTier: 'good',
     useManufacturerRates: true,
     pricingMethod: 'selling', // Default to selling price
@@ -33,6 +38,11 @@ const DEFAULT_SETTINGS: DealerSettings = {
     defaultTerms: [24, 36, 39, 48],
     defaultMileage: [10000, 12000, 15000],
     defaultDownPayment: 2500,
+    defaultDownPaymentConfig: {
+      type: 'percentage',
+      value: 10,
+      basedOn: 'selling',
+    },
     pricingMethod: 'msrp', // Default to MSRP for leases
     acquisitionFee: 595,
     dispositionFee: 350,
@@ -93,12 +103,35 @@ class DealerSettingsService {
     try {
       const stored = localStorage.getItem(this.storageKey);
       if (stored) {
-        return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
+        const parsed = JSON.parse(stored);
+        // Deep merge to ensure nested objects are properly merged
+        return this.deepMerge(DEFAULT_SETTINGS, parsed);
       }
     } catch (error) {
       console.error('Error loading dealer settings:', error);
     }
     return DEFAULT_SETTINGS;
+  }
+  
+  private deepMerge(target: any, source: any): any {
+    const output = { ...target };
+    if (this.isObject(target) && this.isObject(source)) {
+      Object.keys(source).forEach(key => {
+        if (this.isObject(source[key])) {
+          if (!(key in target))
+            Object.assign(output, { [key]: source[key] });
+          else
+            output[key] = this.deepMerge(target[key], source[key]);
+        } else {
+          Object.assign(output, { [key]: source[key] });
+        }
+      });
+    }
+    return output;
+  }
+  
+  private isObject(item: any): boolean {
+    return item && typeof item === 'object' && !Array.isArray(item);
   }
 
   private saveSettings(): void {
@@ -114,15 +147,8 @@ class DealerSettingsService {
   }
 
   updateSettings(updates: Partial<DealerSettings>): DealerSettings {
-    this.settings = {
-      ...this.settings,
-      ...updates,
-      finance: { ...this.settings.finance, ...updates.finance },
-      lease: { ...this.settings.lease, ...updates.lease },
-      fees: { ...this.settings.fees, ...updates.fees },
-      display: { ...this.settings.display, ...updates.display },
-      integrations: { ...this.settings.integrations, ...updates.integrations },
-    };
+    // Use deep merge to properly handle nested updates
+    this.settings = this.deepMerge(this.settings, updates);
     this.saveSettings();
     return this.getSettings();
   }
