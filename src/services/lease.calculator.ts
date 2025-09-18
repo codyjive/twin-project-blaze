@@ -27,9 +27,8 @@ export class LeaseCalculator {
         .reduce((sum, inc) => sum + inc.amount, 0);
     }
     
-    // Use Honda-specific residual values based on actual market data
-    // Honda typically offers 65-70% residuals on Civic models
-    const residualPercent = this.getResidualPercent(vehicle.build.make, vehicle.build.model, term);
+    // Use 60% residual value as requested for Ford vehicles
+    const residualPercent = 60; // Fixed 60% residual as requested
     const residualValue = msrp * (residualPercent / 100);
     
     // Get money factor - try manufacturer rates first, then fall back to defaults
@@ -106,6 +105,20 @@ export class LeaseCalculator {
     const make = vehicle.build.make;
     const model = vehicle.build.model;
     
+    if (make.toLowerCase() === 'ford') {
+      // Ford-specific money factors
+      const fordFactors: Record<number, number> = {
+        24: 0.00150,  // 3.6% APR
+        36: 0.00175,  // 4.2% APR 
+        39: 0.00185,  // 4.44% APR
+        48: 0.00200,  // 4.8% APR
+      };
+      return { 
+        moneyFactor: fordFactors[term] || 0.00175,
+        hasManufacturerRate: false
+      };
+    }
+    
     if (make.toLowerCase() === 'honda') {
       const hondaFactors: Record<number, number> = {
         24: 0.00100,  // 2.4% APR
@@ -133,50 +146,10 @@ export class LeaseCalculator {
     };
   }
 
+  // Removed - using fixed 60% residual as requested
   private getResidualPercent(make: string, model: string, term: number): number {
-    // Honda-specific residual values based on actual market data
-    if (make.toLowerCase() === 'honda') {
-      // Civic models have strong residuals
-      if (model.toLowerCase().includes('civic')) {
-        const civicResiduals: Record<number, number> = {
-          24: 72,   // 72% for 24 months
-          36: 68,   // 68% for 36 months - matches dealer example
-          39: 65,   // 65% for 39 months
-          48: 60,   // 60% for 48 months
-        };
-        return civicResiduals[term] || 65;
-      }
-      
-      // HR-V and CR-V models
-      if (model.toLowerCase().includes('hr-v') || model.toLowerCase().includes('cr-v')) {
-        const suvResiduals: Record<number, number> = {
-          24: 70,
-          36: 66,
-          39: 63,
-          48: 58,
-        };
-        return suvResiduals[term] || 63;
-      }
-      
-      // Default Honda residuals
-      const hondaDefaults: Record<number, number> = {
-        24: 68,
-        36: 64,
-        39: 61,
-        48: 56,
-      };
-      return hondaDefaults[term] || 60;
-    }
-    
-    // Default residuals for other makes
-    const defaultResiduals: Record<number, number> = {
-      24: 60,
-      36: 55,
-      39: 52,
-      48: 48,
-    };
-    
-    return defaultResiduals[term] || 50;
+    // Fixed 60% residual for all vehicles as requested
+    return 60;
   }
 
   private roundPayment(payment: number, method: string = 'nearest5'): number {

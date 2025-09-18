@@ -1,8 +1,8 @@
 import type { DealerSettings } from '@/types/dealer-settings';
 
 const DEFAULT_SETTINGS: DealerSettings = {
-  dealerId: 'inver-grove-honda',
-  dealerName: 'Inver Grove Honda',
+  dealerId: 'tony-serra-ford',
+  dealerName: 'Tony Serra Ford',
   
   finance: {
     defaultTerms: [36, 48, 60, 72, 84],
@@ -11,20 +11,20 @@ const DEFAULT_SETTINGS: DealerSettings = {
     useManufacturerRates: true,
     pricingMethod: 'selling', // Default to selling price
     customRates: {
-      excellent: 4.99,
-      good: 6.99,
-      fair: 9.99,
-      poor: 14.99,
+      excellent: 5.99,
+      good: 7.99,
+      fair: 10.99,
+      poor: 15.99,
     },
     markupBasisPoints: 200,
     maxBackend: 2500,
     fallbackRates: {
       byModel: [],
       default: {
-        excellent: 5.99,
-        good: 6.99,
-        fair: 9.99,
-        poor: 13.99,
+        excellent: 6.99,
+        good: 8.99,
+        fair: 11.99,
+        poor: 16.99,
       },
     },
   },
@@ -74,8 +74,8 @@ const DEFAULT_SETTINGS: DealerSettings = {
   },
   
   integrations: {
-    financeFeedUrl: 'https://files.dealercentives.com/feeds/meta/regional/feeds/honda/honda-ut-finance.json',
-    inventoryWebhookUrl: 'https://dealercentives.app.n8n.cloud/webhook/7790fd25-d45b-469b-abf9-8b18946dc5dd',
+    financeFeedUrl: 'https://files.dealercentives.com/feeds/meta/regional/feeds/ford/ford-al-finance.json',
+    inventoryWebhookUrl: 'https://dealercentives.app.n8n.cloud/webhook/b845e99a-f406-48fa-b8a7-ba95d7111e91',
     autoUpdateRates: true,
     updateFrequency: 'daily',
   },
