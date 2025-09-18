@@ -16,59 +16,93 @@ class ManufacturerRatesService {
       return this.rates;
     }
     
-    // Since we can't fetch directly due to CORS, use sample Ford rates
-    // In production, this would be fetched server-side
-    this.rates = this.getSampleFordRates();
+    try {
+      // Try to fetch from the actual Ford feed
+      // Note: This may fail due to CORS, in which case we'll use sample data
+      const response = await fetch(this.feedUrl);
+      if (response.ok) {
+        const data = await response.json();
+        this.rates = this.parseFordIncentives(data);
+        console.log(`Loaded ${this.rates.length} Ford rates from feed`);
+      } else {
+        throw new Error('Failed to fetch Ford rates');
+      }
+    } catch (error) {
+      console.log('Using sample Ford rates due to CORS or network issues');
+      // Fall back to sample rates if fetch fails
+      this.rates = this.getSampleFordRates();
+    }
+    
     this.lastFetchTime = Date.now();
-    console.log(`Loaded ${this.rates.length} Ford manufacturer finance rates`);
+    console.log(`Total ${this.rates.length} Ford manufacturer finance rates available`);
     return this.rates;
   }
 
   private getSampleFordRates(): ManufacturerFinanceRate[] {
-    // Sample Ford finance rates based on typical Ford Credit offers
+    // Sample Ford finance rates based on actual feed structure
     return [
       {
-        id: 'ford-f150-2025-0apr',
+        id: null,
         year: '2025',
         make: 'Ford',
-        model: 'F-150',
+        model: 'F-150 F-150', // Match the feed format
         trim: '',
         incentive_type: 'finance',
-        finance_rate: '0.0',
-        finance_term: 60,
-        finance_apr: '0.0',
-        finance_disclaimer: '0% APR for 60 months on select 2025 Ford F-150 models. Not all buyers will qualify for Ford Credit financing.',
+        finance_rate: '1.9',
+        finance_term: 48,
+        finance_apr: '1.9',
+        finance_disclaimer: 'Program #21420: Not all buyers will qualify. Ford Credit limited-term APR financing. Take new retail delivery from dealer stock by 09/30/2025. See dealer for qualifications and complete details.',
         lease_disclaimer: '',
-        valid_from: '2025-01-01',
-        valid_through: '2025-01-31',
-        expiration_date: '2025-01-31',
-        title_raw: '0% APR for 60 Months',
-        offer_headline: '0% APR for 60 Months on 2025 F-150',
-        disclaimer_raw: 'Not all buyers will qualify',
-        oem_program_name: 'Ford Credit 0% APR',
+        valid_from: '2025-09-09',
+        valid_through: '2025-09-30',
+        expiration_date: '09/30/2025',
+        title_raw: 'APR Financing',
+        offer_headline: 'Public Offers',
+        disclaimer_raw: 'Program #21420: Not all buyers will qualify. Ford Credit limited-term APR financing. Take new retail delivery from dealer stock by 09/30/2025. See dealer for qualifications and complete details.',
+        oem_program_name: '',
       },
       {
-        id: 'ford-f150-2025-low-apr',
+        id: null,
         year: '2025',
         make: 'Ford',
-        model: 'F-150',
+        model: 'Mustang',
         trim: '',
         incentive_type: 'finance',
-        finance_rate: '4.99',
-        finance_term: 72,
-        finance_apr: '4.99',
-        finance_disclaimer: '4.99% APR for up to 72 months on select 2025 Ford F-150 models. Not all buyers will qualify for Ford Credit financing.',
+        finance_rate: '3.9',
+        finance_term: 36,
+        finance_apr: '3.9',
+        finance_disclaimer: 'Program #21420: Not all buyers will qualify. Ford Credit limited-term APR financing. Take new retail delivery from dealer stock by 09/30/2025. See dealer for qualifications and complete details.',
         lease_disclaimer: '',
-        valid_from: '2025-01-01',
-        valid_through: '2025-01-31',
-        expiration_date: '2025-01-31',
-        title_raw: '4.99% APR for 72 Months',
-        offer_headline: '4.99% APR for up to 72 Months',
-        disclaimer_raw: 'Not all buyers will qualify',
-        oem_program_name: 'Ford Credit Special APR',
+        valid_from: '2025-07-08',
+        valid_through: '2025-09-30',
+        expiration_date: '09/30/2025',
+        title_raw: 'APR Financing',
+        offer_headline: 'Public Offers',
+        disclaimer_raw: 'Program #21420: Not all buyers will qualify. Ford Credit limited-term APR financing. Take new retail delivery from dealer stock by 09/30/2025. See dealer for qualifications and complete details.',
+        oem_program_name: '',
       },
       {
-        id: 'ford-explorer-2025-low-apr',
+        id: null,
+        year: '2025',
+        make: 'Ford',
+        model: 'Transit Chassis',
+        trim: '',
+        incentive_type: 'finance',
+        finance_rate: '6.9',
+        finance_term: 48,
+        finance_apr: '6.9',
+        finance_disclaimer: 'Program #21440: Not all buyers will qualify. Ford Credit limited-term APR financing. Take new retail delivery from dealer stock by 09/30/2025. See dealer for qualifications and complete details.',
+        lease_disclaimer: '',
+        valid_from: '2025-07-08',
+        valid_through: '2025-09-30',
+        expiration_date: '09/30/2025',
+        title_raw: 'Upfit APR Financing',
+        offer_headline: 'Public Offers',
+        disclaimer_raw: 'Program #21440: Not all buyers will qualify. Ford Credit limited-term APR financing. Take new retail delivery from dealer stock by 09/30/2025. See dealer for qualifications and complete details.',
+        oem_program_name: '',
+      },
+      {
+        id: null,
         year: '2025',
         make: 'Ford',
         model: 'Explorer',
@@ -80,15 +114,15 @@ class ManufacturerRatesService {
         finance_disclaimer: '3.9% APR for up to 60 months on select 2025 Ford Explorer models. Not all buyers will qualify for Ford Credit financing.',
         lease_disclaimer: '',
         valid_from: '2025-01-01',
-        valid_through: '2025-01-31',
-        expiration_date: '2025-01-31',
+        valid_through: '2025-09-30',
+        expiration_date: '2025-09-30',
         title_raw: '3.9% APR for 60 Months',
         offer_headline: '3.9% APR for up to 60 Months',
         disclaimer_raw: 'Not all buyers will qualify',
         oem_program_name: 'Ford Credit Special APR',
       },
       {
-        id: 'ford-escape-2025-low-apr',
+        id: null,
         year: '2025',
         make: 'Ford',
         model: 'Escape',
@@ -100,15 +134,15 @@ class ManufacturerRatesService {
         finance_disclaimer: '2.9% APR for up to 60 months on select 2025 Ford Escape models. Not all buyers will qualify for Ford Credit financing.',
         lease_disclaimer: '',
         valid_from: '2025-01-01',
-        valid_through: '2025-01-31',
-        expiration_date: '2025-01-31',
+        valid_through: '2025-09-30',
+        expiration_date: '2025-09-30',
         title_raw: '2.9% APR for 60 Months',
         offer_headline: '2.9% APR for up to 60 Months',
         disclaimer_raw: 'Not all buyers will qualify',
         oem_program_name: 'Ford Credit Special APR',
       },
       {
-        id: 'ford-bronco-2025-low-apr',
+        id: null,
         year: '2025',
         make: 'Ford',
         model: 'Bronco',
@@ -120,35 +154,15 @@ class ManufacturerRatesService {
         finance_disclaimer: '5.9% APR for up to 72 months on select 2025 Ford Bronco models. Not all buyers will qualify for Ford Credit financing.',
         lease_disclaimer: '',
         valid_from: '2025-01-01',
-        valid_through: '2025-01-31',
-        expiration_date: '2025-01-31',
+        valid_through: '2025-09-30',
+        expiration_date: '2025-09-30',
         title_raw: '5.9% APR for 72 Months',
         offer_headline: '5.9% APR for up to 72 Months',
         disclaimer_raw: 'Not all buyers will qualify',
         oem_program_name: 'Ford Credit Special APR',
       },
       {
-        id: 'ford-mustang-2025-low-apr',
-        year: '2025',
-        make: 'Ford',
-        model: 'Mustang',
-        trim: '',
-        incentive_type: 'finance',
-        finance_rate: '4.9',
-        finance_term: 60,
-        finance_apr: '4.9',
-        finance_disclaimer: '4.9% APR for up to 60 months on select 2025 Ford Mustang models. Not all buyers will qualify for Ford Credit financing.',
-        lease_disclaimer: '',
-        valid_from: '2025-01-01',
-        valid_through: '2025-01-31',
-        expiration_date: '2025-01-31',
-        title_raw: '4.9% APR for 60 Months',
-        offer_headline: '4.9% APR for up to 60 Months',
-        disclaimer_raw: 'Not all buyers will qualify',
-        oem_program_name: 'Ford Credit Special APR',
-      },
-      {
-        id: 'ford-edge-2025-low-apr',
+        id: null,
         year: '2025',
         make: 'Ford',
         model: 'Edge',
@@ -160,8 +174,8 @@ class ManufacturerRatesService {
         finance_disclaimer: '3.9% APR for up to 60 months on select 2025 Ford Edge models. Not all buyers will qualify for Ford Credit financing.',
         lease_disclaimer: '',
         valid_from: '2025-01-01',
-        valid_through: '2025-01-31',
-        expiration_date: '2025-01-31',
+        valid_through: '2025-09-30',
+        expiration_date: '2025-09-30',
         title_raw: '3.9% APR for 60 Months',
         offer_headline: '3.9% APR for up to 60 Months',
         disclaimer_raw: 'Not all buyers will qualify',
@@ -173,11 +187,10 @@ class ManufacturerRatesService {
   private parseFordIncentives(data: any): ManufacturerFinanceRate[] {
     const rates: ManufacturerFinanceRate[] = [];
     
-    // Parse Ford incentive data structure
-    // The Ford feed typically has an array of offers
+    // Parse Ford incentive data structure based on actual feed format
     if (Array.isArray(data)) {
       data.forEach((item: any) => {
-        if (item.incentive_type === 'finance' && item.finance_apr) {
+        if (item.incentive_type === 'finance' && item.finance_rate) {
           rates.push({
             id: item.id || null,
             year: item.year || new Date().getFullYear().toString(),
@@ -185,18 +198,18 @@ class ManufacturerRatesService {
             model: item.model || '',
             trim: item.trim || '',
             incentive_type: 'finance',
-            finance_rate: item.finance_apr || '0',
+            finance_rate: item.finance_rate || '0',
             finance_term: item.finance_term || 60,
-            finance_apr: item.finance_apr || '0',
-            finance_disclaimer: item.finance_disclaimer || item.disclaimer || '',
+            finance_apr: item.finance_rate || '0', // Use finance_rate as APR
+            finance_disclaimer: item.finance_disclaimer || item.disclaimer_raw || '',
             lease_disclaimer: item.lease_disclaimer || '',
             valid_from: item.valid_from || new Date().toISOString(),
             valid_through: item.valid_through || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
             expiration_date: item.expiration_date || item.valid_through || '',
-            title_raw: item.title || item.offer_headline || '',
-            offer_headline: item.offer_headline || item.title || '',
-            disclaimer_raw: item.disclaimer || '',
-            oem_program_name: item.program_name || 'Ford Credit Special APR',
+            title_raw: item.title_raw || item.offer_headline || '',
+            offer_headline: item.offer_headline || item.title_raw || '',
+            disclaimer_raw: item.disclaimer_raw || item.combined_disclaimer || '',
+            oem_program_name: item.oem_program_name || 'Ford Credit Special APR',
           });
         }
       });
@@ -278,17 +291,33 @@ class ManufacturerRatesService {
     const rateModelLower = rateModel.toLowerCase();
     const vehicleModelLower = vehicleModel.toLowerCase();
     
+    // Handle Ford feed duplicated model names like "F-150 F-150"
+    // Extract the actual model name (first part before duplication)
+    const cleanRateModel = rateModelLower.split(' ')[0];
+    const cleanVehicleModel = vehicleModelLower.split(' ')[0];
+    
     // Direct match
+    if (cleanRateModel === cleanVehicleModel) return true;
     if (rateModelLower === vehicleModelLower) return true;
     
-    // Check if one contains the other
-    if (rateModelLower.includes(vehicleModelLower) || vehicleModelLower.includes(rateModelLower)) {
+    // Check if the rate model contains the vehicle model
+    if (rateModelLower.includes(vehicleModelLower)) return true;
+    
+    // Check for F-150 specific matching
+    if ((rateModelLower.includes('f-150') || rateModelLower.includes('f150')) && 
+        (vehicleModelLower.includes('f-150') || vehicleModelLower.includes('f150'))) {
+      return true;
+    }
+    
+    // Check for Transit specific matching
+    if (rateModelLower.includes('transit') && vehicleModelLower.includes('transit')) {
       return true;
     }
     
     // Handle variations like "CR-V" vs "CRV"
     const normalizeModel = (model: string) => model.replace(/[-\s]/g, '');
-    return normalizeModel(rateModelLower) === normalizeModel(vehicleModelLower);
+    return normalizeModel(cleanRateModel) === normalizeModel(cleanVehicleModel) ||
+           normalizeModel(rateModelLower) === normalizeModel(vehicleModelLower);
   }
 
   private isTermInRange(requestedTerm: number, rateTerm: number, offerHeadline: string): boolean {
