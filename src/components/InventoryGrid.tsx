@@ -43,6 +43,15 @@ export function InventoryGrid({
 
     // Apply sorting
     filtered = [...filtered].sort((a, b) => {
+      // First, check if either vehicle has $0 pricing
+      const aHasZeroPrice = (a.price === 0 || a.msrp === 0);
+      const bHasZeroPrice = (b.price === 0 || b.msrp === 0);
+      
+      // If one has zero price and the other doesn't, put the zero price at the bottom
+      if (aHasZeroPrice && !bHasZeroPrice) return 1;
+      if (!aHasZeroPrice && bHasZeroPrice) return -1;
+      
+      // If both have zero price or both have non-zero price, apply regular sorting
       switch (sortBy) {
         case 'price-asc':
           return (a.price || a.msrp) - (b.price || b.msrp);
