@@ -1,6 +1,6 @@
 export const dealerConfig = {
-  dealerId: 'inver-grove-honda',
-  dealerName: 'Inver Grove Honda',
+  dealerId: 'tony-serra-ford',
+  dealerName: 'Tony Serra Ford',
   
   finance: {
     defaultTerms: [36, 48, 60, 72, 84],

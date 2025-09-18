@@ -4,7 +4,7 @@ import { mockInventory } from './mock-data';
 
 class InventoryService {
   private inventory: Vehicle[] = [];
-  private inventoryUrl = 'https://dealercentives.app.n8n.cloud/webhook/7790fd25-d45b-469b-abf9-8b18946dc5dd';
+  private inventoryUrl = 'https://dealercentives.app.n8n.cloud/webhook/b845e99a-f406-48fa-b8a7-ba95d7111e91';
 
   async fetchInventory(): Promise<Vehicle[]> {
     try {
@@ -56,7 +56,7 @@ class InventoryService {
       dom: item.dom || 0,
       build: {
         year: item.build?.year || new Date().getFullYear(),
-        make: item.build?.make || 'Honda',
+        make: item.build?.make || 'Ford',
         model: item.build?.model || '',
         trim: item.build?.trim || '',
         body_style: item.build?.body_type || '',
@@ -85,6 +85,7 @@ class InventoryService {
 
   private calculateResiduals(vehicle: Vehicle): Record<number, number> {
     const baseResidual: Record<string, Record<number, number>> = {
+      'Ford': { 24: 0.62, 36: 0.53, 39: 0.50, 48: 0.43 },
       'Honda': { 24: 0.64, 36: 0.55, 39: 0.52, 48: 0.45 },
       'default': { 24: 0.60, 36: 0.50, 39: 0.47, 48: 0.40 },
     };

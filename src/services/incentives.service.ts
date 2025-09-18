@@ -15,6 +15,7 @@ interface IncentiveRule {
 }
 
 class IncentivesService {
+  private incentivesUrl = 'https://files.dealercentives.com/feeds/meta/regional/feeds/ford/ford-al-finance.json';
   // Default incentive rules - these should eventually come from a database or API
   private defaultRules: IncentiveRule[] = [
     {
@@ -76,8 +77,18 @@ class IncentivesService {
   private async getManufacturerIncentives(vehicle: Vehicle): Promise<Incentive[]> {
     const incentives: Incentive[] = [];
     
-    // For now, return empty array - this will be connected to manufacturer feeds
-    // TODO: Parse manufacturer incentive feeds for cash rebates and bonus cash
+    try {
+      // Fetch Ford incentives from feed
+      const response = await fetch(this.incentivesUrl);
+      if (response.ok) {
+        const data = await response.json();
+        // Parse Ford incentive data
+        // Structure will depend on actual feed format
+        // For now, return empty array until we know the structure
+      }
+    } catch (error) {
+      console.error('Error fetching Ford incentives:', error);
+    }
     
     return incentives;
   }
