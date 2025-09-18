@@ -83,7 +83,11 @@ export function DealerSettingsPage() {
             <RotateCcw className="h-4 w-4 mr-2" />
             Reset
           </Button>
-          <Button onClick={handleSave} disabled={!hasChanges}>
+          <Button 
+            onClick={handleSave} 
+            disabled={!hasChanges}
+            className="bg-foreground text-background hover:bg-foreground/90"
+          >
             <Save className="h-4 w-4 mr-2" />
             Save Changes
           </Button>
@@ -129,8 +133,8 @@ export function DealerSettingsPage() {
                   </p>
                     {settings.finance.useManufacturerRates && (
                     <div className="flex items-center gap-2 mt-2">
-                      <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                      <span className="text-xs text-primary">Active - Ford Credit rates enabled</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <span className="text-xs text-green-600">Active - Ford Credit rates enabled</span>
                     </div>
                   )}
                 </div>

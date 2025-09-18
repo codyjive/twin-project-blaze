@@ -97,6 +97,7 @@ export function ModelOverridesManager({ overrides = [], onUpdate }: ModelOverrid
         <Button
           onClick={() => setShowAddForm(!showAddForm)}
           variant="outline"
+          className="border-border hover:bg-accent"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add Override
@@ -348,7 +349,12 @@ export function ModelOverridesManager({ overrides = [], onUpdate }: ModelOverrid
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleAdd}>Add Override</Button>
+              <Button 
+                onClick={handleAdd}
+                className="bg-foreground text-background hover:bg-foreground/90"
+              >
+                Add Override
+              </Button>
               <Button variant="outline" onClick={() => {
                 setShowAddForm(false);
                 setNewOverride({
@@ -374,7 +380,10 @@ export function ModelOverridesManager({ overrides = [], onUpdate }: ModelOverrid
                   <CardTitle className="text-base">
                     {override.year} {override.make} {override.model} {override.trim || ''}
                   </CardTitle>
-                  <Badge variant={override.active ? 'default' : 'secondary'}>
+                  <Badge 
+                    variant={override.active ? 'default' : 'secondary'}
+                    className={override.active ? 'bg-green-500/10 text-green-600 border-green-500/20' : ''}
+                  >
                     {override.active ? 'Active' : 'Inactive'}
                   </Badge>
                 </div>
