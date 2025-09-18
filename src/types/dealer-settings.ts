@@ -1,3 +1,5 @@
+import type { ModelOverride, DownPaymentConfig } from './model-overrides';
+
 export interface DealerSettings {
   dealerId: string;
   dealerName: string;
@@ -6,6 +8,7 @@ export interface DealerSettings {
   finance: {
     defaultTerms: number[];
     defaultDownPayment: number;
+    defaultDownPaymentConfig?: DownPaymentConfig;
     defaultCreditTier: 'excellent' | 'good' | 'fair' | 'poor';
     useManufacturerRates: boolean;
     pricingMethod: 'msrp' | 'selling'; // Which price to use for calculations
@@ -45,6 +48,7 @@ export interface DealerSettings {
     defaultTerms: number[];
     defaultMileage: number[];
     defaultDownPayment: number;
+    defaultDownPaymentConfig?: DownPaymentConfig;
     pricingMethod: 'msrp' | 'selling'; // Which price to use for calculations
     acquisitionFee: number;
     dispositionFee: number;
@@ -97,4 +101,7 @@ export interface DealerSettings {
     autoUpdateRates: boolean;
     updateFrequency: 'hourly' | 'daily' | 'weekly';
   };
+  
+  // Model-specific overrides
+  modelOverrides?: ModelOverride[];
 }

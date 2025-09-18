@@ -9,7 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from '@/hooks/use-toast';
 import { dealerSettingsService } from '@/services/dealer-settings.service';
 import type { DealerSettings } from '@/types/dealer-settings';
-import { Save, RotateCcw, DollarSign, Calculator, FileText, Palette, RefreshCw } from 'lucide-react';
+import { Save, RotateCcw, DollarSign, Calculator, FileText, Palette, RefreshCw, Settings2 } from 'lucide-react';
+import { ModelOverridesManager } from '@/components/ModelOverridesManager';
+import { DownPaymentConfigComponent } from '@/components/DownPaymentConfig';
 
 export function DealerSettingsPage() {
   const [settings, setSettings] = useState<DealerSettings>(dealerSettingsService.getSettings());
@@ -58,7 +60,7 @@ export function DealerSettingsPage() {
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-display font-bold gradient-text">Dealer Settings</h2>
+          <h2 className="text-3xl font-semibold">Dealer Settings</h2>
           <p className="text-muted-foreground mt-1">
             Configure rates, fees, and display preferences for your dealership
           </p>
@@ -89,7 +91,7 @@ export function DealerSettingsPage() {
       </div>
 
       <Tabs defaultValue="finance" className="space-y-6">
-        <TabsList className="grid grid-cols-4 w-full max-w-2xl">
+        <TabsList className="grid grid-cols-5 w-full">
           <TabsTrigger value="finance" className="gap-2">
             <DollarSign className="h-4 w-4" />
             Finance
@@ -101,6 +103,10 @@ export function DealerSettingsPage() {
           <TabsTrigger value="fees" className="gap-2">
             <FileText className="h-4 w-4" />
             Fees & Taxes
+          </TabsTrigger>
+          <TabsTrigger value="overrides" className="gap-2">
+            <Settings2 className="h-4 w-4" />
+            Model Overrides
           </TabsTrigger>
           <TabsTrigger value="display" className="gap-2">
             <Palette className="h-4 w-4" />
@@ -121,10 +127,10 @@ export function DealerSettingsPage() {
                   <p className="text-sm text-muted-foreground">
                     Automatically pull rates from Ford Credit incentive feeds
                   </p>
-                  {settings.finance.useManufacturerRates && (
+                    {settings.finance.useManufacturerRates && (
                     <div className="flex items-center gap-2 mt-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                      <span className="text-xs text-green-600">Active - Ford Credit rates enabled</span>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                      <span className="text-xs text-primary">Active - Ford Credit rates enabled</span>
                     </div>
                   )}
                 </div>
@@ -136,17 +142,14 @@ export function DealerSettingsPage() {
                 />
               </div>
 
+              <DownPaymentConfigComponent
+                config={settings.finance.defaultDownPaymentConfig}
+                defaultValue={settings.finance.defaultDownPayment}
+                onChange={(config) => updateSettings(['finance', 'defaultDownPaymentConfig'], config)}
+                label="Default Down Payment Configuration"
+              />
+
               <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Default Down Payment</Label>
-                <Input
-                  type="number"
-                  value={settings.finance.defaultDownPayment}
-                  onChange={(e) => 
-                    updateSettings(['finance', 'defaultDownPayment'], Number(e.target.value))
-                  }
-                />
-              </div>
               
               <div>
                 <Label>Pricing Method for Calculations</Label>
@@ -248,17 +251,14 @@ export function DealerSettingsPage() {
               <CardDescription>Configure lease terms and fees</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              <DownPaymentConfigComponent
+                config={settings.lease.defaultDownPaymentConfig}
+                defaultValue={settings.lease.defaultDownPayment}
+                onChange={(config) => updateSettings(['lease', 'defaultDownPaymentConfig'], config)}
+                label="Default Down Payment Configuration"
+              />
+
               <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Default Down Payment</Label>
-                <Input
-                  type="number"
-                  value={settings.lease.defaultDownPayment}
-                  onChange={(e) => 
-                    updateSettings(['lease', 'defaultDownPayment'], Number(e.target.value))
-                  }
-                />
-              </div>
               
               <div>
                 <Label>Pricing Method for Calculations</Label>
@@ -402,6 +402,17 @@ export function DealerSettingsPage() {
                   />
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="overrides">
+          <Card>
+            <CardContent className="pt-6">
+              <ModelOverridesManager
+                overrides={settings.modelOverrides || []}
+                onUpdate={(overrides) => updateSettings(['modelOverrides'], overrides)}
+              />
             </CardContent>
           </Card>
         </TabsContent>
