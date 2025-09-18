@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Professional automotive design system inspired by Honda and modern car dealerships */
+
+@layer base {
+  :root {
+    /* Core color palette - Honda-inspired with professional automotive feel */
+    --background: 0 0% 98%;
+    --foreground: 220 30% 10%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 10%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 10%;
+    
+    /* Honda red accent with professional blue */
+    --primary: 357 76% 53%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 220 30% 96%;
+    --secondary-foreground: 220 30% 10%;
+    
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 10% 40%;
+    
+    --accent: 210 85% 54%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 142 76% 42%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 357 76% 53%;
+    
+    --radius: 0.625rem;
+    
+    /* Sidebar */
+    --sidebar-background: 220 30% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 357 76% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 220 20% 20%;
+    --sidebar-ring: 357 76% 53%;
+    
+    /* Beautiful gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(357 76% 53%), hsl(357 76% 63%));
+    --gradient-secondary: linear-gradient(135deg, hsl(210 85% 54%), hsl(199 89% 48%));
+    --gradient-accent: linear-gradient(135deg, hsl(357 76% 53%), hsl(210 85% 54%));
+    --gradient-hero: linear-gradient(180deg, hsl(220 30% 10% / 0.9), hsl(220 30% 10% / 0.7)), linear-gradient(135deg, hsl(357 76% 53% / 0.1), hsl(210 85% 54% / 0.1));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%), hsl(220 30% 98%));
+    --gradient-subtle: linear-gradient(180deg, transparent, hsl(220 30% 96% / 0.5));
+    
+    /* Professional shadows */
+    --shadow-elegant: 0 4px 20px -2px hsl(220 30% 10% / 0.1), 0 2px 8px -2px hsl(220 30% 10% / 0.06);
+    --shadow-glow: 0 0 40px hsl(357 76% 53% / 0.15);
+    --shadow-card: 0 2px 12px -1px hsl(220 30% 10% / 0.08), 0 1px 3px hsl(220 30% 10% / 0.04);
+    --shadow-hover: 0 8px 30px -4px hsl(220 30% 10% / 0.15), 0 4px 12px -2px hsl(220 30% 10% / 0.08);
+    --shadow-inner-glow: inset 0 2px 4px 0 hsl(0 0% 100% / 0.06);
+  }
+  
+  .dark {
+    --background: 220 30% 8%;
+    --foreground: 0 0% 95%;
+    
+    --card: 220 30% 10%;
+    --card-foreground: 0 0% 95%;
+    
+    --popover: 220 30% 10%;
+    --popover-foreground: 0 0% 95%;
+    
+    --primary: 357 76% 53%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 220 30% 15%;
+    --secondary-foreground: 0 0% 95%;
+    
+    --muted: 220 20% 18%;
+    --muted-foreground: 220 10% 60%;
+    
+    --accent: 210 85% 54%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 142 76% 42%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 357 76% 53%;
+    
+    --sidebar-background: 220 30% 6%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 357 76% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 20% 10%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 220 20% 15%;
+    --sidebar-ring: 357 76% 53%;
+    
+    /* Dark mode gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(357 76% 53%), hsl(357 76% 43%));
+    --gradient-secondary: linear-gradient(135deg, hsl(210 85% 54%), hsl(199 89% 38%));
+    --gradient-accent: linear-gradient(135deg, hsl(357 76% 43%), hsl(210 85% 44%));
+    --gradient-hero: linear-gradient(180deg, hsl(220 30% 6% / 0.95), hsl(220 30% 8% / 0.8));
+    --gradient-card: linear-gradient(135deg, hsl(220 30% 10%), hsl(220 30% 12%));
+    --gradient-subtle: linear-gradient(180deg, transparent, hsl(220 30% 6% / 0.5));
+    
+    /* Dark mode shadows */
+    --shadow-elegant: 0 4px 20px -2px hsl(0 0% 0% / 0.3), 0 2px 8px -2px hsl(0 0% 0% / 0.2);
+    --shadow-glow: 0 0 40px hsl(357 76% 53% / 0.2);
+    --shadow-card: 0 2px 12px -1px hsl(0 0% 0% / 0.2), 0 1px 3px hsl(0 0% 0% / 0.1);
+    --shadow-hover: 0 8px 30px -4px hsl(0 0% 0% / 0.3), 0 4px 12px -2px hsl(0 0% 0% / 0.2);
+    --shadow-inner-glow: inset 0 2px 4px 0 hsl(0 0% 100% / 0.02);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', sans-serif;
+  }
+  
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer components {
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-secondary/50 rounded-full;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full hover:bg-primary/30 transition-colors;
+  }
+  
+  /* Shimmer effect for loading states */
+  .shimmer {
+    @apply relative overflow-hidden;
+    background: linear-gradient(
+      90deg,
+      transparent 25%,
+      hsl(var(--primary) / 0.05) 50%,
+      transparent 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+  
+  /* Glass morphism effect */
+  .glass {
+    @apply backdrop-blur-md bg-card/80 border border-border/50;
+  }
+  
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-primary bg-clip-text text-transparent;
+  }
+}
