@@ -250,7 +250,7 @@ export function VehicleCardProfessional({
                   </div>
                   <div className="flex justify-between">
                     <dt className="text-gray-500">VIN</dt>
-                    <dd className="font-mono text-xs text-gray-900">{vehicle.vin}</dd>
+                    <dd className="text-xs text-gray-900">{vehicle.vin}</dd>
                   </div>
                   <div className="flex justify-between">
                     <dt className="text-gray-500">MSRP</dt>
