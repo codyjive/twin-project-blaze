@@ -21,6 +21,34 @@ export class FinanceCalculator {
     // Get base pricing based on dealer's preference
     const vehiclePrice = financeSettings.pricingMethod === 'msrp' ? vehicle.msrp : (vehicle.price || vehicle.msrp);
     
+    // If no valid price, return zero payment
+    if (!vehiclePrice || vehiclePrice <= 0) {
+      return {
+        type: 'finance',
+        payment: 0,
+        apr: 0,
+        term: term,
+        amountFinanced: 0,
+        totalPrice: 0,
+        incentivesSaved: 0,
+        totalAtSigning: 0,
+        disclaimer: 'Price information not available',
+        breakdown: {
+          vehiclePrice: 0,
+          incentives: 0,
+          salePrice: 0,
+          docFee: 0,
+          electronicFiling: 0,
+          salesTax: 0,
+          totalAmount: 0,
+          downPayment: 0,
+          tradeValue: 0,
+          amountFinanced: 0,
+        },
+        hasManufacturerRate: false,
+      };
+    }
+    
     // Apply incentives
     let incentiveAmount = 0;
     if (includeIncentives && vehicle.eligibleIncentives) {

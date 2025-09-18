@@ -19,6 +19,34 @@ export class LeaseCalculator {
     const msrp = vehicle.msrp;
     const sellingPrice = leaseConfig.pricingMethod === 'msrp' ? msrp : (vehicle.price || msrp);
     
+    // If no valid price, return zero payment
+    if (!msrp || msrp <= 0 || !sellingPrice || sellingPrice <= 0) {
+      return {
+        type: 'lease',
+        payment: 0,
+        term: term,
+        annualMiles: annualMiles,
+        totalAtSigning: 0,
+        residualValue: 0,
+        incentivesSaved: 0,
+        hasManufacturerRate: false,
+        disclaimer: 'Price information not available',
+        breakdown: {
+          vehiclePrice: 0,
+          incentives: 0,
+          salePrice: 0,
+          docFee: 0,
+          acquisitionFee: 0,
+          salesTax: 0,
+          totalAmount: 0,
+          downPayment: 0,
+          residualValue: 0,
+          depreciation: 0,
+          financeCharge: 0,
+        },
+      };
+    }
+    
     // Apply lease incentives
     let leaseIncentive = 0;
     if (includeIncentives && vehicle.eligibleIncentives) {

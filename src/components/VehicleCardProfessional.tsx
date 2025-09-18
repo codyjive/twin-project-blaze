@@ -153,16 +153,20 @@ export function VehicleCardProfessional({
             <div className="pb-3 border-b border-gray-100">
               <div className="flex items-baseline justify-between mb-1">
                 <span className="text-sm font-medium text-gray-900">Est. Finance</span>
-                {financePayment ? (
-                  <span className="text-2xl font-bold text-gray-900">
-                    ${financePayment.payment}
-                    <span className="text-base font-normal text-gray-600">/mo*</span>
-                  </span>
+                {vehicle.msrp > 0 ? (
+                  financePayment ? (
+                    <span className="text-2xl font-bold text-gray-900">
+                      ${financePayment.payment}
+                      <span className="text-base font-normal text-gray-600">/mo*</span>
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">Calculating...</span>
+                  )
                 ) : (
-                  <span className="text-sm text-gray-400">Calculating...</span>
+                  <span className="text-sm text-gray-400">Price not available</span>
                 )}
               </div>
-              {financePayment && (
+              {financePayment && vehicle.msrp > 0 && (
                 <p className="text-xs text-gray-500">
                   {financePayment.term} mo • {financePayment.apr}% APR • ${financePayment.breakdown?.downPayment ? Math.abs(financePayment.breakdown.downPayment).toLocaleString() : '0'} down
                 </p>
@@ -173,16 +177,20 @@ export function VehicleCardProfessional({
             <div className="pb-3">
               <div className="flex items-baseline justify-between mb-1">
                 <span className="text-sm font-medium text-gray-900">Est. Lease</span>
-                {leasePayment ? (
-                  <span className="text-2xl font-bold text-gray-900">
-                    ${leasePayment.payment}
-                    <span className="text-base font-normal text-gray-600">/mo*</span>
-                  </span>
+                {vehicle.msrp > 0 ? (
+                  leasePayment ? (
+                    <span className="text-2xl font-bold text-gray-900">
+                      ${leasePayment.payment}
+                      <span className="text-base font-normal text-gray-600">/mo*</span>
+                    </span>
+                  ) : (
+                    <span className="text-sm text-gray-400">Calculating...</span>
+                  )
                 ) : (
-                  <span className="text-sm text-gray-400">Calculating...</span>
+                  <span className="text-sm text-gray-400">Price not available</span>
                 )}
               </div>
-              {leasePayment && (
+              {leasePayment && vehicle.msrp > 0 && (
                 <p className="text-xs text-gray-500">
                   {leasePayment.term} mo • {(leasePayment.annualMiles || 10000).toLocaleString()} mi/yr • ${leasePayment.breakdown?.downPayment ? Math.abs(leasePayment.breakdown.downPayment).toLocaleString() : '0'} down
                 </p>
