@@ -9,7 +9,7 @@ export class FinanceCalculator {
 
   async calculate({
     vehicle,
-    downPayment = 0,
+    downPayment,
     tradeValue = 0,
     term = 72,
     creditTier = 'good',
@@ -18,6 +18,21 @@ export class FinanceCalculator {
     const settings = dealerSettingsService.getSettings();
     const fees = settings.fees;
     const financeSettings = settings.finance;
+    
+    // Calculate down payment based on configuration if not provided
+    if (downPayment === undefined) {
+      const config = financeSettings.defaultDownPaymentConfig;
+      if (config) {
+        if (config.type === 'percentage') {
+          const basePrice = config.basedOn === 'msrp' ? vehicle.msrp : (vehicle.price || vehicle.msrp);
+          downPayment = Math.round((basePrice || 0) * (config.value / 100));
+        } else {
+          downPayment = config.value;
+        }
+      } else {
+        downPayment = financeSettings.defaultDownPayment || 0;
+      }
+    }
     // Get base pricing based on dealer's preference
     const vehiclePrice = financeSettings.pricingMethod === 'msrp' ? vehicle.msrp : (vehicle.price || vehicle.msrp);
     

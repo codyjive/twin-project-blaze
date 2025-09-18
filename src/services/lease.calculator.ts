@@ -8,7 +8,7 @@ export class LeaseCalculator {
 
   async calculate({
     vehicle,
-    downPayment = 2500,
+    downPayment,
     term = 36,
     annualMiles = 12000,
     includeIncentives = true,
@@ -16,6 +16,21 @@ export class LeaseCalculator {
     const settings = dealerSettingsService.getSettings();
     const leaseConfig = settings.lease;
     const fees = settings.fees;
+    
+    // Calculate down payment based on configuration if not provided
+    if (downPayment === undefined) {
+      const config = leaseConfig.defaultDownPaymentConfig;
+      if (config) {
+        if (config.type === 'percentage') {
+          const basePrice = config.basedOn === 'msrp' ? vehicle.msrp : (vehicle.price || vehicle.msrp);
+          downPayment = Math.round((basePrice || 0) * (config.value / 100));
+        } else {
+          downPayment = config.value;
+        }
+      } else {
+        downPayment = leaseConfig.defaultDownPayment || 0;
+      }
+    }
     const msrp = vehicle.msrp;
     const sellingPrice = leaseConfig.pricingMethod === 'msrp' ? msrp : (vehicle.price || msrp);
     

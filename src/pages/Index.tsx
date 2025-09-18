@@ -45,7 +45,7 @@ export default function Index() {
                 DealerCentives
               </h1>
               <p className="text-sm text-gray-500">
-                Inver Grove Honda Payment Calculator
+                Tony Serra Ford Payment Calculator
               </p>
             </div>
           </div>
