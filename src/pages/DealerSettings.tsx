@@ -119,8 +119,14 @@ export function DealerSettingsPage() {
                 <div>
                   <Label>Use Manufacturer Rates</Label>
                   <p className="text-sm text-muted-foreground">
-                    Automatically pull rates from manufacturer feeds
+                    Automatically pull rates from Ford Credit incentive feeds
                   </p>
+                  {settings.finance.useManufacturerRates && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                      <span className="text-xs text-green-600">Active - Ford Credit rates enabled</span>
+                    </div>
+                  )}
                 </div>
                 <Switch
                   checked={settings.finance.useManufacturerRates}

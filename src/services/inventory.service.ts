@@ -1,5 +1,6 @@
 import type { Vehicle } from '@/types/inventory';
 import { incentivesService } from './incentives.service';
+import { manufacturerRatesService } from './manufacturer-rates.service';
 import { mockInventory } from './mock-data';
 
 class InventoryService {
@@ -72,6 +73,9 @@ class InventoryService {
   }
 
   private async enhanceInventory(): Promise<void> {
+    // Pre-fetch manufacturer rates for Ford vehicles
+    await manufacturerRatesService.fetchRates('ford');
+    
     this.inventory = await Promise.all(
       this.inventory.map(async vehicle => ({
         ...vehicle,
