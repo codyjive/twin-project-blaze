@@ -1,5 +1,6 @@
 import type { Vehicle } from '@/types/inventory';
 import { incentivesService } from './incentives.service';
+import { mockInventory } from './mock-data';
 
 class InventoryService {
   private inventory: Vehicle[] = [];
@@ -9,8 +10,14 @@ class InventoryService {
     try {
       console.log('Fetching real inventory from DealerCentives...');
       
-      // Fetch real inventory data
-      const response = await fetch(this.inventoryUrl);
+      // Try to fetch real inventory data with a timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const response = await fetch(this.inventoryUrl, {
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
       
       if (!response.ok) {
         throw new Error(`Failed to fetch inventory: ${response.status}`);
@@ -31,9 +38,10 @@ class InventoryService {
       
       return this.inventory;
     } catch (error) {
-      console.error('Error fetching inventory:', error);
-      // Return empty array on error
-      this.inventory = [];
+      console.error('Error fetching inventory, using mock data:', error);
+      // Use mock data as fallback
+      this.inventory = mockInventory;
+      await this.enhanceInventory();
       return this.inventory;
     }
   }
